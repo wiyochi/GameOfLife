@@ -132,17 +132,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Cell.cpp" />
-    <ClCompile Include="src\CellArray.cpp" />
-    <ClCompile Include="src\inputConsole\input.cpp" />
+    <ClCompile Include="src\Cell\Cell.cpp" />
+    <ClCompile Include="src\Cell\CellArray.cpp" />
+    <ClCompile Include="src\GameOfLife.cpp" />
+    <ClCompile Include="src\Launching\input.cpp" />
+    <ClCompile Include="src\Launching\launch.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Cell.h" />
-    <ClInclude Include="src\CellArray.h" />
-    <ClInclude Include="src\inputConsole\input.h" />
-    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\Cell\Cell.h" />
+    <ClInclude Include="src\Cell\CellArray.h" />
+    <ClInclude Include="src\GameOfLife.h" />
+    <ClInclude Include="src\Launching\input.h" />
+    <ClInclude Include="src\Launching\launch.h" />
+    <ClInclude Include="src\Window\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

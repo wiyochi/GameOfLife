@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
+#include <string>
 
-const char* firstInput();
-void windowInput(int *windowWidth, int *windowHeight);
+std::string firstInput();
 void selectInput();
+void windowInput(int *windowWidth, int *windowHeight);
+int speedInput();

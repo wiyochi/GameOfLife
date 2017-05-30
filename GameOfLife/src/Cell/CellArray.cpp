@@ -98,7 +98,7 @@ void CellArray::changeStates()
 			}
 		}
 	}
-	for (int i = 0; i < index[0].size(); i++)
+	for (unsigned int i = 0; i < index[0].size(); i++)
 		cellArray[index[0][i]][index[1][i]]->changeState();
 }
 

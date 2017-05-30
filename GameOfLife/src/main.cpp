@@ -3,9 +3,9 @@
 #include <thread>
 #include <chrono>
 #include "SDL.h"
-#include "Window.h"
-#include "Cell.h"
-#include "CellArray.h"
+#include "Window/Window.h"
+#include "Cell/Cell.h"
+#include "Cell/CellArray.h"
 #undef main
 
 void waitEvent(Window *mainWindow, CellArray *cellTab, SDL_Renderer *renderer);
