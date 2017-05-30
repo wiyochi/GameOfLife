@@ -8,7 +8,7 @@
 #include "CellArray.h"
 #undef main
 
-void waitEvent(Window *window);
+void waitEvent(Window *mainWindow, CellArray *cellTab, SDL_Renderer *renderer);
 
 int main(int argc, char** argv)
 {
@@ -26,18 +26,18 @@ int main(int argc, char** argv)
 	cellTab->createShip(2, 2);
 	cellTab->randomize(20);
 
-	//std::thread eventThread(waitEvent, mainWindow);
+	std::thread eventThread(waitEvent, mainWindow, cellTab, renderer);
 	
 	while (mainWindow->isOpen())
 	{
-		cellTab->render(renderer);
-		mainWindow->render();
+		//cellTab->render(renderer);
+		//mainWindow->render();
 		mainWindow->eventKey();
-		cellTab->changeStates();
-		std::this_thread::sleep_for(std::chrono::milliseconds(250));
+		//cellTab->changeStates();
+		//std::this_thread::sleep_for(std::chrono::milliseconds(250));
 	}
 
-	//eventThread.join();
+	eventThread.join();
 	delete cellTab;
 	delete mainWindow;
 
@@ -46,11 +46,13 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-void waitEvent(Window* window)
+void waitEvent(Window *mainWindow, CellArray *cellTab, SDL_Renderer *renderer)
 {
-	while (window->isOpen())
+	while (mainWindow->isOpen())
 	{
-		//printf("Im in Thread1\n");
-		window->eventKey();
+		cellTab->render(renderer);
+		mainWindow->render();
+		cellTab->changeStates();
+		std::this_thread::sleep_for(std::chrono::milliseconds(250));
 	}
 }
