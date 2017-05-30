@@ -41,6 +41,7 @@ int main(int argc, char** argv)
 	delete cellTab;
 	delete mainWindow;
 
+
 	system("PAUSE");
 	return 0;
 }
