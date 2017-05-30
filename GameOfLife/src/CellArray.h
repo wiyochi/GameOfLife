@@ -1,0 +1,29 @@
+#pragma once
+#include "Cell.h"
+#include "SDL.h"
+#include <stdio.h>
+#include <vector>
+#include <ctime>
+
+class CellArray
+{
+public:
+	CellArray(int x, int y, int w, int h, int nW, int nH);
+	~CellArray();
+	void createCells();
+	void render(SDL_Renderer* renderer);
+	void changeStates();
+	int checkAliveAround(int i, int j);
+	void createShip(int x, int y);
+	void randomize(int percent);
+
+private:
+	int m_x;
+	int m_y;
+	int m_width;
+	int m_height;
+	int m_cellNbW;
+	int m_cellNbH;
+	int m_spacing;
+	Cell*** cellArray;
+};
