@@ -9,6 +9,8 @@ CellArray::CellArray(int x, int y, int w, int h, int nW, int nH)
 	m_cellNbW = nW;
 	m_cellNbH = nH;
 	m_spacing = 6;
+	m_speed = 250;
+	m_running = true;
 	this->createCells();
 }
 
@@ -72,34 +74,37 @@ void CellArray::render(SDL_Renderer * renderer)
 
 void CellArray::changeStates()
 {
-	int nbNeighboringCells;
-	std::vector<std::vector<int>> index;
-	index.resize(2);
-	for (int i = 0; i < m_cellNbW; i++)
+	if (m_running)
 	{
-		for (int j = 0; j < m_cellNbH; j++)
+		int nbNeighboringCells;
+		std::vector<std::vector<int>> index;
+		index.resize(2);
+		for (int i = 0; i < m_cellNbW; i++)
 		{
-			nbNeighboringCells = this->checkAliveAround(i, j);
-			if (cellArray[i][j]->isAlive())
+			for (int j = 0; j < m_cellNbH; j++)
 			{
-				if (nbNeighboringCells < 2 || nbNeighboringCells>3) {
-					index[0].push_back(i);
-					index[1].push_back(j);
-					//cellArray[i][j]->changeState();
+				nbNeighboringCells = this->checkAliveAround(i, j);
+				if (cellArray[i][j]->isAlive())
+				{
+					if (nbNeighboringCells < 2 || nbNeighboringCells>3) {
+						index[0].push_back(i);
+						index[1].push_back(j);
+					}
 				}
-			}
-			else
-			{
-				if (nbNeighboringCells == 3) {
-					index[0].push_back(i);
-					index[1].push_back(j);
-					//cellArray[i][j]->changeState();
+				else
+				{
+					if (nbNeighboringCells == 3) {
+						index[0].push_back(i);
+						index[1].push_back(j);
+					}
 				}
 			}
 		}
+		for (unsigned int i = 0; i < index[0].size(); i++)
+			cellArray[index[0][i]][index[1][i]]->changeState();
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(m_speed));
 	}
-	for (unsigned int i = 0; i < index[0].size(); i++)
-		cellArray[index[0][i]][index[1][i]]->changeState();
 }
 
 int CellArray::checkAliveAround(int i, int j)
@@ -126,8 +131,6 @@ int CellArray::checkAliveAround(int i, int j)
 		count++;
 	if (top && right && cellArray[i - 1][j + 1]->isAlive())
 		count++;
-	/*if (i == 3 && j == 4)
-		printf("left : %d et i,j-1 : %d\n", left, cellArray[i][j - 1]->isAlive());*/
 	if (left && cellArray[i][j - 1]->isAlive())
 		count++;
 	if (right && cellArray[i][j + 1]->isAlive())
@@ -145,7 +148,7 @@ int CellArray::checkAliveAround(int i, int j)
 void CellArray::createShip(int x, int y)
 {
 	if (x + 2 > m_cellNbW || y + 2 > m_cellNbH)
-		printf("Impossible");
+		std::cout << "Impossible" << std::endl;
 	else {
 		cellArray[x][y]->changeState(true);
 		cellArray[x+2][y]->changeState(true);
@@ -168,4 +171,31 @@ void CellArray::randomize(int percent)
 				cellArray[i][j]->changeState(true);
 		}
 	}
+}
+
+void CellArray::clear()
+{
+	for (int i = 0; i < m_cellNbW; i++)
+	{
+		for (int j = 0; j < m_cellNbH; j++)
+		{
+			cellArray[i][j]->changeState(false);
+		}
+	}
+}
+
+void CellArray::changeSpeed(int speed)
+{
+	if (speed > 0 && speed < 5001)
+		m_speed = speed;
+}
+
+void CellArray::play()
+{
+	m_running = true;
+}
+
+void CellArray::stop()
+{
+	m_running = false;
 }

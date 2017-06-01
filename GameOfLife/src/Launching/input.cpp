@@ -3,20 +3,24 @@
 std::string firstInput()
 {
 	std::string userInput;
-	do {
-		std::cout << "GameOfLife: ";
-		std::cin >> userInput;
-	} while (userInput != "new" || userInput != "speed" || userInput != "stop" || userInput != "play");
+	std::cout << "GameOfLife: ";
+	std::cin >> userInput;
 	return userInput;
 }
 
 void selectInput()
 {
-	std::string userInput = firstInput();
 	int width(0), height(0);
+	std::string userInput = firstInput();
+	std::string tmp = { userInput[0], userInput[1], userInput[2], userInput[3] };
 
-	if (userInput == "new")
+	if (tmp == "gol ")
 	{
+		int i = 4;
+		while (userInput[i] != ' ')
+		{
+			tmp = { userInput[i] };
+		}
 		windowInput(&width, &height);
 	}
 	else if (userInput == "speed")

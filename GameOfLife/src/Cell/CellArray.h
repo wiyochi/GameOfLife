@@ -1,9 +1,11 @@
 #pragma once
 #include "Cell.h"
 #include "SDL.h"
-#include <stdio.h>
+#include <iostream>
 #include <vector>
 #include <ctime>
+#include <thread>
+#include <chrono>
 
 class CellArray
 {
@@ -16,6 +18,10 @@ public:
 	int checkAliveAround(int i, int j);
 	void createShip(int x, int y);
 	void randomize(int percent);
+	void clear();
+	void changeSpeed(int speed);
+	void play();
+	void stop();
 
 private:
 	int m_x;
@@ -25,5 +31,7 @@ private:
 	int m_cellNbW;
 	int m_cellNbH;
 	int m_spacing;
+	int m_speed;
+	bool m_running;
 	Cell*** cellArray;
 };

@@ -134,7 +134,6 @@
   <ItemGroup>
     <ClCompile Include="src\Cell\Cell.cpp" />
     <ClCompile Include="src\Cell\CellArray.cpp" />
-    <ClCompile Include="src\GameOfLife.cpp" />
     <ClCompile Include="src\Launching\input.cpp" />
     <ClCompile Include="src\Launching\launch.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -143,7 +142,6 @@
   <ItemGroup>
     <ClInclude Include="src\Cell\Cell.h" />
     <ClInclude Include="src\Cell\CellArray.h" />
-    <ClInclude Include="src\GameOfLife.h" />
     <ClInclude Include="src\Launching\input.h" />
     <ClInclude Include="src\Launching\launch.h" />
     <ClInclude Include="src\Window\Window.h" />
