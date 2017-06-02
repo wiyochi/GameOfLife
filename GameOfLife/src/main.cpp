@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <string>
 #include <thread>
 #include <chrono>
 #include "SDL.h"
@@ -23,14 +24,17 @@ int main(int argc, char** argv)
 	std::thread gameOfLife(launchWindow, windowWidth, windowHeight);
 
 
-	std::string test = "bonjour salut";
-	std::string tmp;
+	std::string test = "456 salut";
+	std::string tmp = "";
 	int i = 0;
 	while (test[i] != ' ')
 	{
-		tmp.append(test[i]);
+		tmp.push_back(test[i]);
+		i++;
 	}
 	std::cout << tmp << std::endl;
+	int tmpint = std::stoi(tmp);
+	std::cout << tmpint+2 << std::endl;
 
 	gameOfLife.join();
 
