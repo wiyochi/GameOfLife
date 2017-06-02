@@ -4,5 +4,5 @@
 #include <thread>
 #include <chrono>
 
-void launchWindow(int width, int height, Window* mainWindow, SDL_Renderer* renderer, CellArray* cellTab);
+void launchWindow(Window* mainWindow, SDL_Renderer* renderer, CellArray* cellTab);
 void waitEvent(Window* window, SDL_Renderer* renderer, CellArray* cellTab);
