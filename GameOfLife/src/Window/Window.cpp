@@ -37,12 +37,12 @@ bool Window::isOpen()
 
 void Window::eventKey()
 {
-	SDL_WaitEvent(&m_event);
-	//SDL_PollEvent(&m_event);
+	//SDL_WaitEvent(&m_event);
+	SDL_PollEvent(&m_event);
 	switch (m_event.type)
 	{
 	case SDL_KEYDOWN:
-		printf("La touche %s a été pressee!\n", SDL_GetKeyName(m_event.key.keysym.sym));
+		std::cout << "La touche " << SDL_GetKeyName(m_event.key.keysym.sym) << " a été pressee!" << std::endl;
 		break;
 	case SDL_QUIT:
 		m_open = false;

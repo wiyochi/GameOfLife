@@ -4,7 +4,7 @@ std::string firstInput()
 {
 	std::string userInput;
 	std::cout << "GameOfLife: ";
-	std::cin >> userInput;
+	std::getline(std::cin, userInput);
 	return userInput;
 }
 
@@ -12,29 +12,46 @@ void golInput()
 {
 	int width(0), height(0);
 	int i;
+	bool error(false);
 	std::string userInput;
-	std::string tmp = "";
+	std::string tmp;
+	std::string gol = "gol";
 
-	while (tmp != "gol ")
+	while (tmp != gol)
 	{
+		if (error)
+		{
+			tmp.push_back(userInput[i]);
+			if (tmp == "help")
+				help();
+			else
+				std::cout << "No instance of the \"Game of life\" in progress (type \"gol <width> <height> \" or \"help\"" << std::endl;
+		}
+
+		tmp = "";
 		i = 0;
 		userInput = firstInput();
-		for (i = 0; i < 4; i++)
+		for (i = 0; i < 3; i++) {
 			tmp.push_back(userInput[i]);
+		}
+
+		if (tmp != gol)
+			error = true;
 	}
+	i++;
 	try {
 		width = argInt(userInput, i, &i);
 		height = argInt(userInput, i, &i);
 	}
 	catch (std::invalid_argument e){
 		std::cerr << e.what() << std::endl;
+		golInput();
 	}
 
-	std::cout << "TEST" << std::endl;
-	selectInput(userInput, width, height);
+	waitEventMainThread(userInput, width, height);
 }
 
-void selectInput(std::string golIn, int width, int height)
+void waitEventMainThread(std::string golIn, int width, int height)
 {
 	Window* mainWindow = new Window("Game of life", 100, 100, width + 2, height + 2);
 	SDL_Renderer* renderer = mainWindow->getRenderer();
@@ -42,10 +59,16 @@ void selectInput(std::string golIn, int width, int height)
 	cellTab->createShip(2, 2);
 	cellTab->randomize(20);
 
-	std::thread gameOfLife(launchWindow, mainWindow, renderer, cellTab);
+	std::thread inputs(selectInput, cellTab);
+	launchWindow(mainWindow, renderer, cellTab);
 
-	std::string userInput = golIn;
-	std::string tmp;
+	inputs.join();
+}
+
+void selectInput(CellArray* cellTab)
+{
+	std::string userInput = firstInput();
+	std::string tmp = "";
 	int i;
 	int newSpeed;
 	int randomPercent;
@@ -57,26 +80,20 @@ void selectInput(std::string golIn, int width, int height)
 	if (tmp == "stop")
 	{
 		cellTab->stop();
-		selectInput(firstInput(), width, height);
+		selectInput(cellTab);
 	}
 	else if (tmp == "play")
 	{
 		cellTab->play();
-		selectInput(firstInput(), width, height);
+		selectInput(cellTab);
 	}
 	else if (tmp == "help")
 	{
-		std::cout << "Available orders with GoL: " << std::endl;
-		std::cout << " - speed <new speed int>" << std::endl;
-		std::cout << " - random <percent int>" << std::endl;
-		std::cout << " - clear" << std::endl;
-		std::cout << " - stop" << std::endl;
-		std::cout << " - play" << std::endl;
-		std::cout << " - createShip <x> <y>" << std::endl;
-		std::cout << " - close" << std::endl;
-		selectInput(firstInput(), width, height);
+		help();
+		selectInput(cellTab);
 	}
 
+	tmp = "";
 	for (i = 0; i < 5; i++)
 		tmp.push_back(userInput[i]);
 
@@ -88,20 +105,22 @@ void selectInput(std::string golIn, int width, int height)
 		}
 		catch (std::invalid_argument e) {
 			std::cerr << e.what() << std::endl;
+			selectInput(cellTab);
 		}
 		cellTab->changeSpeed(newSpeed);
-		selectInput(firstInput(), width, height);
+		selectInput(cellTab);
 	}
 	else if (tmp == "clear")
 	{
 		cellTab->clear();
-		selectInput(firstInput(), width, height);
+		selectInput(cellTab);
 	}
 	else if (tmp == "close")
 	{
 		golInput();
 	}
 
+	tmp = "";
 	for (i = 0; i < 6; i++)
 		tmp.push_back(userInput[i]);
 
@@ -113,11 +132,13 @@ void selectInput(std::string golIn, int width, int height)
 		}
 		catch (std::invalid_argument e) {
 			std::cerr << e.what() << std::endl;
+			selectInput(cellTab);
 		}
 		cellTab->randomize(randomPercent);
-		selectInput(firstInput(), width, height);
+		selectInput(cellTab);
 	}
 
+	tmp = "";
 	for (i = 0; i < 10; i++)
 		tmp.push_back(userInput[i]);
 
@@ -130,59 +151,40 @@ void selectInput(std::string golIn, int width, int height)
 		}
 		catch (std::invalid_argument e) {
 			std::cerr << e.what() << std::endl;
+			selectInput(cellTab);
 		}
 		cellTab->createShip(x, y);
-		selectInput(firstInput(), width, height);
+		selectInput(cellTab);
 	}
-}
-
-void windowInput(std::string str, int* w, int* h)
-{
-	int i = 4;
-	try
-	{
-		*w = argInt(str, i, &i);
-	}
-	catch (std::invalid_argument& e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-
-	try
-	{
-		*h = argInt(str, i, &i);
-	}
-	catch (std::invalid_argument& e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-}
-
-int speedInput()
-{
-	int speed;
-	do {
-		std::cout << "Speed: ";
-		std::cin >> speed;
-		std::cout << std::endl;
-	} while (speed < 0 || speed > 100);
-	return speed;
 }
 
 int argInt(std::string str, int i, int* adI)
 {
 	std::string tmp;
-	while (str[i] != ' ' && str[i] > 47 && str[i] < 58)
+	while ((i > str.size()-1 || str[i] != ' ') && str[i] > 47 && str[i] < 58)
 	{
 		tmp.push_back(str[i]);
 		i++;
 	}
 
-	if (str[i] == ' ')
+	if (i > str.size()-1 || str[i] == ' ')
 	{
 		*adI = i + 1;
 		return std::stoi(tmp);
 	}
 	else
 		throw std::invalid_argument("ArgError: string can't be convert");
+}
+
+void help()
+{
+	std::cout << "Available orders with GoL: " << std::endl;
+	std::cout << " - gol <width> <height>" << std::endl;
+	std::cout << " - speed <new speed int (in millisecond)>" << std::endl;
+	std::cout << " - random <percent int>" << std::endl;
+	std::cout << " - clear" << std::endl;
+	std::cout << " - stop" << std::endl;
+	std::cout << " - play" << std::endl;
+	std::cout << " - createShip <x> <y>" << std::endl;
+	std::cout << " - close" << std::endl;
 }
