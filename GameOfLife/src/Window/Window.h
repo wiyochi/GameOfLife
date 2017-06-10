@@ -8,6 +8,7 @@ public:
 	Window(const char* title, int x, int y, int width, int height);
 	~Window();
 	bool isOpen();
+	void close();
 	void eventKey();
 	void drawRectangle(int x, int y, int width, int height);
 	void render();

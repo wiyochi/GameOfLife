@@ -186,10 +186,12 @@ void CellArray::clear()
 
 void CellArray::changeSpeed(int speed)
 {
-	if (speed > 5000)
-		this->stop();
-	if (speed >= 0 && speed <= 5000)
+	if (speed >= 0 && speed <= 2000)
 		m_speed = speed;
+	else if (speed > 2000)
+		this->stop();
+	else if (speed < 0)
+		m_speed = 0;
 }
 
 void CellArray::play()

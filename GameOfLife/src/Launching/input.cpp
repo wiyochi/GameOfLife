@@ -3,8 +3,10 @@
 std::string firstInput()
 {
 	std::string userInput;
-	std::cout << "GameOfLife: ";
-	std::getline(std::cin, userInput);
+	do {
+		std::cout << "GameOfLife: ";
+		std::getline(std::cin, userInput);
+	} while (userInput.size() < 1);
 	return userInput;
 }
 
@@ -59,14 +61,17 @@ void waitEventMainThread(std::string golIn, int width, int height)
 	cellTab->createShip(2, 2);
 	cellTab->randomize(20);
 
-	std::thread inputs(selectInput, cellTab);
+	std::thread inputs(selectInput, cellTab, mainWindow);
 	launchWindow(mainWindow, renderer, cellTab);
 
 	inputs.join();
 }
 
-void selectInput(CellArray* cellTab)
+void selectInput(CellArray* cellTab, Window* mainWindow)
 {
+	if (!mainWindow->isOpen())
+		golInput();
+
 	std::string userInput = firstInput();
 	std::string tmp = "";
 	int i;
@@ -74,24 +79,30 @@ void selectInput(CellArray* cellTab)
 	int randomPercent;
 	int x, y;
 
+	if (userInput.size() < 4)
+		selectInput(cellTab, mainWindow);
+
 	for (i = 0; i < 4; i++)
 		tmp.push_back(userInput[i]);
 
 	if (tmp == "stop")
 	{
 		cellTab->stop();
-		selectInput(cellTab);
+		selectInput(cellTab, mainWindow);
 	}
 	else if (tmp == "play")
 	{
 		cellTab->play();
-		selectInput(cellTab);
+		selectInput(cellTab, mainWindow);
 	}
 	else if (tmp == "help")
 	{
 		help();
-		selectInput(cellTab);
+		selectInput(cellTab, mainWindow);
 	}
+	
+	if (userInput.size() < 5)
+		selectInput(cellTab, mainWindow);
 
 	tmp = "";
 	for (i = 0; i < 5; i++)
@@ -105,20 +116,24 @@ void selectInput(CellArray* cellTab)
 		}
 		catch (std::invalid_argument e) {
 			std::cerr << e.what() << std::endl;
-			selectInput(cellTab);
+			selectInput(cellTab, mainWindow);
 		}
-		cellTab->changeSpeed(newSpeed);
-		selectInput(cellTab);
+		cellTab->changeSpeed(newSpeed*-20 + 2000);
+		selectInput(cellTab, mainWindow);
 	}
 	else if (tmp == "clear")
 	{
 		cellTab->clear();
-		selectInput(cellTab);
+		selectInput(cellTab, mainWindow);
 	}
 	else if (tmp == "close")
 	{
+		mainWindow->close();
 		golInput();
 	}
+
+	if (userInput.size() < 6)
+		selectInput(cellTab, mainWindow);
 
 	tmp = "";
 	for (i = 0; i < 6; i++)
@@ -132,11 +147,14 @@ void selectInput(CellArray* cellTab)
 		}
 		catch (std::invalid_argument e) {
 			std::cerr << e.what() << std::endl;
-			selectInput(cellTab);
+			selectInput(cellTab, mainWindow);
 		}
 		cellTab->randomize(randomPercent);
-		selectInput(cellTab);
+		selectInput(cellTab, mainWindow);
 	}
+
+	if (userInput.size() < 10)
+		selectInput(cellTab, mainWindow);
 
 	tmp = "";
 	for (i = 0; i < 10; i++)
@@ -151,11 +169,12 @@ void selectInput(CellArray* cellTab)
 		}
 		catch (std::invalid_argument e) {
 			std::cerr << e.what() << std::endl;
-			selectInput(cellTab);
+			selectInput(cellTab, mainWindow);
 		}
 		cellTab->createShip(x, y);
-		selectInput(cellTab);
+		selectInput(cellTab, mainWindow);
 	}
+	selectInput(cellTab, mainWindow);
 }
 
 int argInt(std::string str, int i, int* adI)

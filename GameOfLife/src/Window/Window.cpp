@@ -11,7 +11,7 @@ Window::Window(const char* title, int x, int y, int width, int height)
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
-		printf("Failed SDL's initialization (%s)\n", SDL_GetError());
+		std::cout << "Failed SDL's initialization (%s)\n" << SDL_GetError() << std::endl;
 	}
 
 	m_window = NULL;
@@ -24,7 +24,6 @@ Window::Window(const char* title, int x, int y, int width, int height)
 Window::~Window()
 {
 	m_open = false;
-	printf("Closing the window\n");
 	SDL_DestroyRenderer(m_renderer);
 	SDL_DestroyWindow(m_window);
 	SDL_Quit();
@@ -35,14 +34,18 @@ bool Window::isOpen()
 	return m_open;
 }
 
+void Window::close()
+{
+	m_open = false;
+}
+
 void Window::eventKey()
 {
-	//SDL_WaitEvent(&m_event);
 	SDL_PollEvent(&m_event);
 	switch (m_event.type)
 	{
 	case SDL_KEYDOWN:
-		std::cout << "La touche " << SDL_GetKeyName(m_event.key.keysym.sym) << " a été pressee!" << std::endl;
+		std::cout << "La touche " << SDL_GetKeyName(m_event.key.keysym.sym) << " a ete pressee!" << std::endl;
 		break;
 	case SDL_QUIT:
 		m_open = false;

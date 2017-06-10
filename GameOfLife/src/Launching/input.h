@@ -8,6 +8,6 @@
 std::string firstInput();
 void golInput();
 void waitEventMainThread(std::string golIn, int width, int height);
-void selectInput(CellArray* cellTab);
+void selectInput(CellArray* cellTab, Window* mainWindow);
 int argInt(std::string str, int i, int* adI);
 void help();
